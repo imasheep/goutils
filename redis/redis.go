@@ -2,6 +2,7 @@
 package redis
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/garyburd/redigo/redis"
@@ -33,6 +34,8 @@ func New(flag string) (r redis.Conn) {
 }
 
 func regRedisInstance(redisInstance RedisInstance) (err error) {
+
+	flag := redisInstance.Flag
 	dsn := redisInstance.Dsn
 	maxIdle := redisInstance.MaxIdle
 	idleTimeout := 240 * time.Second
@@ -41,7 +44,7 @@ func regRedisInstance(redisInstance RedisInstance) (err error) {
 	readTimeout := redisInstance.ReadTimeout * time.Millisecond
 	writeTimeout := redisInstance.WriteTimeout * time.Millisecond
 
-	redisPool[redisInstance.Flag] = &redis.Pool{
+	redisPool[flag] = &redis.Pool{
 		MaxIdle:     maxIdle,
 		IdleTimeout: idleTimeout,
 		Dial: func() (c redis.Conn, err error) {
@@ -56,6 +59,8 @@ func regRedisInstance(redisInstance RedisInstance) (err error) {
 		},
 		TestOnBorrow: pingRedis,
 	}
+	instanceFlag := "RegRedisInstance"
+	fmt.Printf("%-20s: %-10s [ %s ]\n", instanceFlag, flag, dsn)
 	return
 }
 
