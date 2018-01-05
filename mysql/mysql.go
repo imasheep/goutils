@@ -9,9 +9,11 @@ import (
 )
 
 func New(flag string) (m orm.Ormer) {
+
 	m = orm.NewOrm()
 	m.Using(flag)
 	return m
+
 }
 
 type MysqlInstance struct {
@@ -50,13 +52,18 @@ func regDatabase(mysqlInstance MysqlInstance) (err error) {
 }
 
 func regDatabaseMulti(defaultFlag string, mysqlInstances []MysqlInstance) (err error) {
+
 	for _, mysqlInstance := range mysqlInstances {
+
 		err = regDatabase(mysqlInstance)
 		if err != nil {
 			return
 		}
+
 		if mysqlInstance.Flag == defaultFlag {
+
 			mysqlInstance.Flag = "default"
+
 			err = regDatabase(mysqlInstance)
 			if err != nil {
 				return
@@ -74,6 +81,7 @@ func Init(defaultFlag string, mysqlInstances []MysqlInstance) {
 }
 
 func (this *MysqlInstance) Init(flag string,
+
 	dbName string,
 	host string,
 	port string,
@@ -86,5 +94,6 @@ func (this *MysqlInstance) Init(flag string,
 	this.Port = port
 	this.User = user
 	this.Password = password
+
 	return
 }

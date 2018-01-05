@@ -31,6 +31,7 @@ func SimGet(requestUrl string) (respHttpCode int, respBody string, err error) {
 	respBody = string(body)
 
 	return
+	
 }
 
 func SimPost(requestUrl string, postData []byte) (respHttpCode int, respBody string, err error) {
@@ -54,4 +55,5 @@ func SimPost(requestUrl string, postData []byte) (respHttpCode int, respBody str
 	respBody = string(body)
 
 	return
+	
 }

@@ -30,7 +30,9 @@ var RedisPool = &redisPool
 func New(flag string) (r redis.Conn) {
 
 	r = (*RedisPool)[flag].Get()
+
 	return
+
 }
 
 func regRedisInstance(redisInstance RedisInstance) (err error) {
@@ -48,43 +50,53 @@ func regRedisInstance(redisInstance RedisInstance) (err error) {
 		MaxIdle:     maxIdle,
 		IdleTimeout: idleTimeout,
 		Dial: func() (c redis.Conn, err error) {
+
 			c, err = redis.DialTimeout("tcp", dsn, connTimeout, readTimeout, writeTimeout)
 			if err != nil {
 				return
 			}
+
 			if _, err = c.Do("AUTH", redisInstance.Password); err != nil {
 				return
 			}
+
 			return
 		},
 		TestOnBorrow: pingRedis,
 	}
 	instanceFlag := "RegRedisInstance"
 	fmt.Printf("%-20s: %-10s [ %s ]\n", instanceFlag, flag, dsn)
+
 	return
+
 }
 
 func regRedisInstanceMulti(redisInstances []RedisInstance) (err error) {
+
 	for _, redisInstance := range redisInstances {
 		err = regRedisInstance(redisInstance)
 		if err != nil {
 			return
 		}
 	}
+
 	return
+
 }
 
 func Init(redisInstances []RedisInstance) {
 	regRedisInstanceMulti(redisInstances)
-
 }
 
 func pingRedis(c redis.Conn, t time.Time) (err error) {
+
 	_, err = c.Do("ping")
 	if err != nil {
 		return err
 	}
+
 	return
+
 }
 
 func (this *RedisInstance) Init(flag string,

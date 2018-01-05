@@ -35,5 +35,7 @@ func CreateRandom(randomType string, randomLength int) string {
 			b[i] = dictionary[v%byte(l)]
 		}
 	}
+
 	return string(b)
+
 }

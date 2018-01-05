@@ -6,12 +6,13 @@ import (
 	"crypto/sha1"
 	"encoding/base64"
 	"fmt"
+	g "goutils"
+	"goutils/web"
 	"net/url"
 	"reflect"
 	"sort"
 	"strings"
 	"time"
-	""
 )
 
 type PreSortedFormat struct {
@@ -30,9 +31,11 @@ type AliPubArgs struct {
 }
 
 func DoAliRequest(aliDomain string, pubArgs AliPubArgs, partArgs interface{}) (res string) {
+
 	url := CreateRequestUrl(aliDomain, pubArgs, partArgs)
-	_, res, _ = SimGet(url)
+	_, res, _ = web.SimGet(url)
 	return
+
 }
 
 func CreateRequestUrl(aliDomain string, pubArgs AliPubArgs, partArgs interface{}) string {
@@ -52,18 +55,22 @@ func CreateRequestUrl(aliDomain string, pubArgs AliPubArgs, partArgs interface{}
 			sortstr = sortstr + "&" + preSortSlice.StrSlice[i]
 		}
 	}
+
 	sortstr = strings.Replace(sortstr, "+", "%20", 65535)
 	signature := CreateSignature("GET", sortstr, pubArgs.SignatureKey)
 	requestUrl := "https://" + aliDomain + "/?" + sortstr + "&Signature=" + signature
 
 	return requestUrl
+
 }
 
 func CreateSignature(method string, stringToSign string, signaturekey string) string {
+
 	seckey := []byte(signaturekey)
 	mac := hmac.New(sha1.New, seckey)
 	mac.Write([]byte(method + "&%2F&" + url.QueryEscape(stringToSign)))
 	signature := url.QueryEscape(base64.StdEncoding.EncodeToString(mac.Sum(nil)))
+
 	return signature
 }
 
@@ -79,8 +86,9 @@ func (this *AliPubArgs) Init(apiVersion string,
 	this.SignatureMethod = signatureMethod
 	this.Timestamp = CreateAliTimeStampUtc()
 	this.SignatureVersion = signatureVersion
-	this.SignatureNonce = CreateRandom("string", 32)
+	this.SignatureNonce = g.CreateRandom("string", 32)
 	this.SignatureKey = signatureKey
+
 }
 
 func (Prestr *PreSortedFormat) Append(argStruct interface{}) {
@@ -94,7 +102,10 @@ func (Prestr *PreSortedFormat) Append(argStruct interface{}) {
 			Prestr.StrSlice = append(Prestr.StrSlice, fmt.Sprintf("%s=%v", k.Field(i).Name, url.QueryEscape(v_r)))
 		}
 	}
+
 }
 func CreateAliTimeStampUtc() string {
+
 	return time.Now().UTC().Format("2006-01-02T15:04:05Z")
+
 }
