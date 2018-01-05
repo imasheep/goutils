@@ -1,4 +1,4 @@
-//random
+//random.go
 package goutils
 
 import (
