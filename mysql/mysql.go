@@ -8,6 +8,8 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+var RegisterModelWithPrefix = orm.RegisterModelWithPrefix
+
 func New(flag string) (m orm.Ormer) {
 
 	m = orm.NewOrm()
@@ -27,6 +29,8 @@ type MysqlInstance struct {
 
 func regDatabase(mysqlInstance MysqlInstance) (err error) {
 
+	instanceFlag := "RegMysqlInstance"
+
 	flag := mysqlInstance.Flag
 	name := mysqlInstance.DbName
 	host := mysqlInstance.Host
@@ -43,7 +47,6 @@ func regDatabase(mysqlInstance MysqlInstance) (err error) {
 
 	orm.SetMaxIdleConns(flag, 30)
 	orm.SetMaxOpenConns(flag, 100)
-	instanceFlag := "RegMysqlInstance"
 
 	fmt.Printf("%-20s: %-10s [ %s ]\n", instanceFlag, flag, dsn)
 
@@ -77,6 +80,7 @@ func Init(defaultFlag string, mysqlInstances []MysqlInstance) {
 
 	orm.Debug = true
 	regDatabaseMulti(defaultFlag, mysqlInstances)
+	orm.RunSyncdb("default", false, true)
 
 }
 

@@ -97,11 +97,16 @@ func (this *LogInstance) Fatal(content ...interface{}) (err error) {
 
 func regLogInstance(logInstance LogInstance) (err error) {
 
+	instanceFlag := "RegLogInstance"
+	flag := logInstance.Flag
+
 	if logInstance.Flag == "" {
 		return errors.New("logInstance.flag can not be empty")
 	}
 
-	logPool[logInstance.Flag] = &logInstance
+	logPool[flag] = &logInstance
+
+	fmt.Printf("%-20s: %-10s [ %s ]\n", instanceFlag, flag, logInstance.LogPath)
 
 	return
 }
@@ -121,6 +126,6 @@ func regLogInstanceMulti(logInstances []LogInstance) (err error) {
 
 	return
 }
-func LogInit(logInstances []LogInstance) {
+func Init(logInstances []LogInstance) {
 	regLogInstanceMulti(logInstances)
 }
