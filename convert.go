@@ -140,3 +140,11 @@ func IntToString(intNum int) (result string) {
 	return
 
 }
+
+func Float64ToString(f float64) (result string) {
+
+	result = strconv.FormatFloat(f, 'f', -1, 64)
+
+	return
+
+}
