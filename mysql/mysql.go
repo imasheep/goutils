@@ -8,6 +8,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+var SyncDbBool = true
 var RegisterModelWithPrefix = orm.RegisterModelWithPrefix
 
 func New(flag string) (m orm.Ormer) {
@@ -80,7 +81,9 @@ func Init(defaultFlag string, mysqlInstances []MysqlInstance) {
 
 	orm.Debug = true
 	regDatabaseMulti(defaultFlag, mysqlInstances)
-	orm.RunSyncdb("default", false, true)
+	if SyncDbBool {
+		orm.RunSyncdb("default", false, true)
+	}
 
 }
 
