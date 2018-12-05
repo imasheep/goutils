@@ -3,10 +3,13 @@ package mysql
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql"
 )
+
+const UPPERLETTER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 var SyncDbBool = true
 var RegisterModelWithPrefix = orm.RegisterModelWithPrefix
@@ -102,5 +105,19 @@ func (this *MysqlInstance) Init(flag string,
 	this.User = user
 	this.Password = password
 
+	return
+}
+
+func GetTableColName(attrName string) (colName string) {
+	for i := 0; i < len(attrName); i++ {
+		if strings.IndexAny(string(attrName[i]), UPPERLETTER) >= 0 {
+			if i != 0 {
+				colName += "_"
+			}
+			colName += strings.ToLower(string(attrName[i]))
+		} else {
+			colName += string(attrName[i])
+		}
+	}
 	return
 }
